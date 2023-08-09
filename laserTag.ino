@@ -18,7 +18,7 @@
 
 
 
-#define VERSION 3
+#define VERSION 4
 String ssid = "Point";         //my WiFi or Hotspot name
 String ssidPass = "12345678";  //my WiFi Password
 
@@ -81,10 +81,9 @@ byte upgrade = 0;
 
 
 unsigned long int update_db = 0;
-int update_db_interval = 10000;  //update database of website every 1000 milliseconds
-String player_name = "None";
+int update_db_interval = 5000;  //update database of website every 1000 milliseconds
+String weapoint = "Gun";
 int reset = 0, prev_reset = 0;
-char server[100] = "http://www.onclick.lv/";  //Server address
 int port = 80;                                //default port
 String response;
 
@@ -130,6 +129,8 @@ void setup() {
     http.begin(client, "http://www.onclick.lv/esp/?mac=" + WiFi.macAddress() + "&ip=" + WiFi.localIP().toString());
     int httpCode = http.GET();
     http.end();
+
+    req_server();  //fetch player details
   }
 
 
@@ -159,7 +160,7 @@ void setup() {
   //SCL--->D5
   //SDA--->D3
   //initialising display
-  //req_server();  //fetch player details
+
 
 
   if (digitalRead(trigger_pin) == LOW && WiFi.status() == WL_CONNECTED) {
@@ -211,7 +212,7 @@ void loop() {
   if (present_ms - time_ms < time_limit) {
     if (present_ms - update_db > update_db_interval) {
       display_hp_ammo();
-      //req_server();
+      req_server();
       update_db = present_ms;
     }
 
@@ -271,9 +272,6 @@ void player_hit() {
   }
 }
 
-void decode_rx_data(uint16_t data) {
-  player_hit();
-}
 
 void got_hit(uint16_t data) {
   display.invertDisplay();
@@ -282,7 +280,7 @@ void got_hit(uint16_t data) {
   delay(100);
   noTone(buzzer_pin);
   digitalWrite(blue_pin, LOW);
-  decode_rx_data(data);
+  player_hit();
   display.normalDisplay();
 }
 
@@ -301,8 +299,22 @@ void tx_rx_check() {
         //trigger pressed
         if (ammo > 0 && hp > 0) {
           ammo--;
-          //update_EE();
-          irsend.sendNEC(0x7100, 16);
+    if (weapoint == "Gun") {
+      irsend.sendNEC(0x7100, 16);
+      max_ammo = 50;
+    }
+    if (weapoint == "Rifle") {
+      irsend.sendNEC(0x7200, 16);
+      max_ammo = 10;
+    }
+    if (weapoint == "Shotgun") {
+      irsend.sendNEC(0x7300, 16);
+      max_ammo = 25;
+    }
+    if (ammo > max_ammo) {
+      ammo = max_ammo;
+    }
+        //  irsend.sendNEC(0x7100, 16);
           //Serial.println("Pressed, sending");
           //Serial.println(String(0x1100, HEX));
           delay(50);  // Wait a bit between retransmissions
@@ -315,7 +327,13 @@ void tx_rx_check() {
     } else if (irrecv.decode(&results)) {
       //Serial.println((uint16_t)results.value, HEX);
       if ((uint16_t)results.value == 0x7100) {
-        //Serial.println((uint16_t)results.value, HEX);
+        hit_damage = 5;
+        got_hit((uint16_t)results.value);
+      } else if ((uint16_t)results.value == 0x7300) {
+        hit_damage = 10;
+        got_hit((uint16_t)results.value);
+      } else if ((uint16_t)results.value == 0x7200) {
+        hit_damage = 15;
         got_hit((uint16_t)results.value);
       } else {
         /*
@@ -358,7 +376,7 @@ void display_hp_ammo() {
   int disp_ammo = map(ammo, 0, max_ammo, 0, 100);
   display.clear();
   display.setFont(ArialMT_Plain_16);
-  display.drawString(0, 0, "Name: " + String(player_name));
+  display.drawString(0, 0, "Arms: " + String(weapoint));
   display.drawString(102, 28, String(hp));
   display.drawString(102, 49, String(ammo));
   display.setFont(ArialMT_Plain_10);
@@ -400,43 +418,29 @@ void display_ammo_over() {
   display.display();
 }
 
-void parse_response() {
-  int l = response.length(), k = 0;
-  int limits[100];
-  for (int i = 0; i < l - 1; i++) {
-    if (response[i] == '#' && response[i + 1] == '_') {
-      limits[k] = i + 2;
-      k++;
-    }
-  }
-  player_name = response.substring(limits[0], limits[1] - 2);
-  String temp = response.substring(limits[1], limits[2] - 2);
-  reset = temp.toInt();
-}
-
 
 void req_server() {
   if (WiFi.status() == WL_CONNECTED) {
-    String url = "LaserTag/get_player_data.php/?player=";
-    url += String(player_ID);
+    String url = "http://www.onclick.lv/lasertag/send.php?weapoint=";
+    url += String(weapoint);
     url += "&hp=";
     url += String(hp);
     url += "&ammo=";
     url += String(ammo);
     url += "&time=";
     url += String(present_ms - time_ms);
+    url += "&mac=";
+    url += String(WiFi.macAddress());
+    url += "&ip=";
+    url += WiFi.localIP().toString();
 
-    String request = server + url;
-    //http.begin(request);
-    int response_code = http.GET();
-    if (response_code == HTTP_CODE_OK) {
-      response = http.getString();
-      //Serial.println(response);
-    } else {
-      //Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(response_code).c_str());
+    HTTPClient http;
+    WiFiClient client;
+    http.begin(client, url);
+    int httpCode = http.GET();
+    if (httpCode > 0) {
+      weapoint = http.getString(); // Get response content as a string
     }
     http.end();
-    delay(10);
-    parse_response();
   }
 }
