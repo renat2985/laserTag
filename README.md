@@ -1,13 +1,21 @@
 # laserTag
 Laser Tag game on NodeMCU and SSD1306 display.
 
+### If you want to see all the participants and change their weapons. You need to make an access point on your phone with the name "Point", and the password 12345678
+### Further, all devices will appear on this site: http://www.onclick.lv/lasertag/
+
 <p align="center">
-<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_6995.png" width=25% height=25% float=right>
-<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_6998.png" width=25% height=25%>
-<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7006.png" width=25% height=25%>
-<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7007.png" width=25% height=25%>
-<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7008.png" width=25% height=25%>
-<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7009.png" width=25% height=25%>
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/screen.png" width=90% height=90%>
+</p>
+
+
+<p align="center">
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_6995.png" width=15% height=15%>
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_6998.png" width=15% height=15%>
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7006.png" width=15% height=15%>
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7007.png" width=15% height=15%>
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7008.png" width=15% height=15%>
+<img src="https://github.com/renat2985/laserTag/blob/main/photo/IMG_7009.png" width=15% height=15%>
 </p>
 
 # Upload instruction
