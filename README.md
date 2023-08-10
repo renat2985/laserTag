@@ -38,7 +38,9 @@ Download Release: [Win32](https://github.com/nodemcu/nodemcu-flasher/blob/master
 
 ![alt text](https://github.com/renat2985/laserTag/blob/main/lasertag_bb.png?raw=true "Screen")
 
-![alt text](https://github.com/renat2985/laserTag/blob/main/arduino.jpg?raw=true "Screen")
+<p align="center">
+<img src="https://github.com/renat2985/laserTag/blob/main/arduino.jpg" width=25% height=25%>
+</p>
 
 
 ## :battery: Donation
