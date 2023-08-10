@@ -9,13 +9,7 @@
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
 
-//EEPROM library
-//#include <EEPROM.h>
-
 #include "SSD1306Wire.h"  //https://github.com/ThingPulse/esp8266-oled-ssd1306
-
-
-
 
 
 #define VERSION 4
@@ -54,11 +48,6 @@ decode_results results;
 
 IRsend irsend(transmiter_pin);
 
-//player details
-int player_ID = 8;
-int game_mode = 0;
-int team_ID = player_ID / 7;
-int score = 0;
 
 //variables
 int max_hp = 100;
@@ -74,28 +63,23 @@ boolean lastbutton_state = HIGH;
 boolean button_state = HIGH;
 boolean new_game = true;  //To reset EEPROM data and start a new game
 int hit_damage = 5;       //hp will reduce by this amount when got hit
-int EEPROM_address = 0;   //EEPROM base address
-uint8_t hit_IP = 0;       //IP address of player who made hit
 unsigned long timeout = 30000;
 byte upgrade = 0;
-
 
 unsigned long int update_db = 0;
 int update_db_interval = 5000;  //update database of website every 1000 milliseconds
 String weapoint = "Gun";
 int reset = 0, prev_reset = 0;
-int port = 80;                                //default port
-String response;
 
 //session variables
-int time_minutes = 5;                                 //Game wil get reset after 5 minutes...i.e., session over
+int time_minutes = 15;                                 //Game wil get reset after 5 minutes...i.e., session over
 unsigned long time_limit = time_minutes * 60 * 1000;  //converting session time into milliseconds
 unsigned long present_ms = 0, time_ms = 0;
 
 HTTPClient http;  //http client object to communicate with website
 
 void setup() {
-  pinMode(trigger_pin, INPUT_PULLUP); 
+  pinMode(trigger_pin, INPUT_PULLUP);
   pinMode(buzzer_pin, OUTPUT);
   pinMode(red_pin, OUTPUT);
   pinMode(blue_pin, OUTPUT);
@@ -134,35 +118,6 @@ void setup() {
   }
 
 
-
-  //connection successfull
-  /*
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());  //IP address assigned to your ESP by my mobile/router
-*/
-  /*
-  //EEPROM
-  EEPROM.begin(4);
-  //hp = EEPROM.read(0);
-  //ammo = EEPROM.read(1);
-  EEPROM.write(0, hp);
-  EEPROM.commit();
-  EEPROM.write(1, ammo);
-  EEPROM.commit();
-  //assigning 4 bytes of memory in EEPROM
-*/
-
-
-  //Setting up OLED display I2C protocol.
-  //SCL--->D5
-  //SDA--->D3
-  //initialising display
-
-
-
   if (digitalRead(trigger_pin) == LOW && WiFi.status() == WL_CONNECTED) {
     display.clear();
     display.setFont(ArialMT_Plain_16);
@@ -188,27 +143,6 @@ void loop() {
 
   present_ms = millis();
 
-  /*
-  if (reset != 0 && prev_reset == 0) {
-    new_game = true;
-    time_ms = present_ms;
-  } else {
-    new_game = false;
-  }
-
-  prev_reset = reset;
-  if (new_game == true) {
-    //reset hp and ammo to their previous values
-    hp = max_hp;
-    ammo = max_ammo;
-    new_game = false;
-    update_EE();
-  } else {
-    hp = EEPROM.read(0);
-    ammo = EEPROM.read(1);
-  }
-*/
-
   if (present_ms - time_ms < time_limit) {
     if (present_ms - update_db > update_db_interval) {
       display_hp_ammo();
@@ -229,15 +163,6 @@ void loop() {
     delay(100);
   }
 }
-
-/*
-void update_EE() {
-  EEPROM.write(0, hp);
-  EEPROM.commit();
-  EEPROM.write(1, ammo);
-  EEPROM.commit();
-}
-*/
 
 void player_dead() {
   tone(buzzer_pin, 50);
@@ -268,7 +193,6 @@ void player_hit() {
     player_dead();
   } else {
     hp = hp - hit_damage;
-    //update_EE();
   }
 }
 
@@ -288,7 +212,7 @@ void tx_rx_check() {
   // If button pressed, send the code.
   button_state = digitalRead(trigger_pin);
   if (lastbutton_state == LOW && button_state == HIGH) {
-    Serial.println("Trigger Released");
+    //Serial.println("Trigger Released");
     irrecv.enableIRIn();  // Re-enable receiver
   }
   if (control_fire == 1) {
@@ -299,24 +223,28 @@ void tx_rx_check() {
         //trigger pressed
         if (ammo > 0 && hp > 0) {
           ammo--;
-    if (weapoint == "Gun") {
-      irsend.sendNEC(0x7100, 16);
-      max_ammo = 50;
-    }
-    if (weapoint == "Rifle") {
-      irsend.sendNEC(0x7200, 16);
-      max_ammo = 10;
-    }
-    if (weapoint == "Shotgun") {
-      irsend.sendNEC(0x7300, 16);
-      max_ammo = 25;
-    }
-    if (ammo > max_ammo) {
-      ammo = max_ammo;
-    }
-        //  irsend.sendNEC(0x7100, 16);
-          //Serial.println("Pressed, sending");
-          //Serial.println(String(0x1100, HEX));
+          if (weapoint == "Gun") {
+            irsend.sendNEC(0x7100, 16);
+            max_ammo = 50;
+          }
+          if (weapoint == "Rifle") {
+            irsend.sendNEC(0x7200, 16);
+            max_ammo = 10;
+          }
+          if (weapoint == "Shotgun") {
+            irsend.sendNEC(0x7300, 16);
+            max_ammo = 25;
+          }
+          if (weapoint == "Kalashnikov") {
+            irsend.sendNEC(0x7400, 16);
+            max_ammo = 100;
+            control_fire = 0;
+          } else {
+            control_fire = 1;
+          }
+          if (ammo > max_ammo) {
+            ammo = max_ammo;
+          }
           delay(50);  // Wait a bit between retransmissions
         } else if (ammo <= 0) {
           no_ammo();
@@ -335,15 +263,9 @@ void tx_rx_check() {
       } else if ((uint16_t)results.value == 0x7200) {
         hit_damage = 15;
         got_hit((uint16_t)results.value);
-      } else {
-        /*
-  display.clear();
-  display.setFont(ArialMT_Plain_16);
-  display.drawString(0, 10, "Debug!");
-  display.setFont(ArialMT_Plain_10);
-  display.drawString(0, 40, (String)results.value);
-  display.display();
-  */
+      } else if ((uint16_t)results.value == 0x7400) {
+        hit_damage = 1;
+        got_hit((uint16_t)results.value);
       }
       irrecv.resume();  // resume receiver
     }
@@ -354,17 +276,29 @@ void tx_rx_check() {
       button_state = digitalRead(trigger_pin);
       if (button_state == LOW) {
         //trigger pressed
-        ammo--;
+        if (ammo > 0 && hp > 0) {
+          ammo--;
+        } else if (ammo <= 0) {
+          no_ammo();
+        }
         //Serial.println("Pressed, sending");
-        irsend.sendNEC(0x1100, 16);
+        irsend.sendNEC(0x7400, 16);
         delay(50);  // Wait a bit between retransmissions
       }
     } else if (irrecv.decode(&results)) {
-      // if (results.value == 0x7100)
-      //{
-      //Serial.println((uint16_t)results.value, HEX);
-      got_hit(results.value);
-      // }
+      if ((uint16_t)results.value == 0x7100) {
+        hit_damage = 5;
+        got_hit((uint16_t)results.value);
+      } else if ((uint16_t)results.value == 0x7300) {
+        hit_damage = 10;
+        got_hit((uint16_t)results.value);
+      } else if ((uint16_t)results.value == 0x7200) {
+        hit_damage = 15;
+        got_hit((uint16_t)results.value);
+      } else if ((uint16_t)results.value == 0x7400) {
+        hit_damage = 1;
+        got_hit((uint16_t)results.value);
+      }
       irrecv.resume();  // resume receiver
     }
     lastbutton_state = button_state;
@@ -439,7 +373,7 @@ void req_server() {
     http.begin(client, url);
     int httpCode = http.GET();
     if (httpCode > 0) {
-      weapoint = http.getString(); // Get response content as a string
+      weapoint = http.getString();  // Get response content as a string
     }
     http.end();
   }
