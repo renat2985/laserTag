@@ -34,6 +34,7 @@ Specification [/build/esp8266.esp8266.generic/laserTag.ino.bin](https://github.c
 
 <img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/nodemcu-flasher.png" height="200px">
 https://github.com/nodemcu/nodemcu-flasher
+
 Download Release: [Win32](https://github.com/nodemcu/nodemcu-flasher/blob/master/Win32/Release/ESP8266Flasher.exe) or [Win64](https://github.com/nodemcu/nodemcu-flasher/blob/master/Win64/Release/ESP8266Flasher.exe).
 
 
