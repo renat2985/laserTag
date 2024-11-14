@@ -32,7 +32,7 @@ Specification [/build/esp8266.esp8266.generic/laserTag.ino.bin](https://github.c
     Flash Frequency: 40Mhz
 ```
 
-<img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/nodemcu-flasher.png" height="200px">
+<img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/nodemcu-flasher.png" width="50%">
 https://github.com/nodemcu/nodemcu-flasher
 
 Download Release: [Win32](https://github.com/nodemcu/nodemcu-flasher/blob/master/Win32/Release/ESP8266Flasher.exe) or [Win64](https://github.com/nodemcu/nodemcu-flasher/blob/master/Win64/Release/ESP8266Flasher.exe).
@@ -51,7 +51,7 @@ Download Release: [Win32](https://github.com/nodemcu/nodemcu-flasher/blob/master
 
 If you like this project, you can buy me a cup of coffee :coffee:
 
-<img src="https://github.com/renat2985/toncoin_payment/blob/main/doc/donate.png" width="700px">
+<img src="https://github.com/renat2985/renat2985/raw/main/donate/donate.png" width="100%">
 
 - PayPal [https://www.paypal.me/RKevrels](https://www.paypal.me/RKevrels/5)
 
