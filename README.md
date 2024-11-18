@@ -47,6 +47,10 @@ Download Release: [Win32](https://github.com/nodemcu/nodemcu-flasher/blob/master
 </p>
 
 
+# STL (stl (Xshot) folder)
+<img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/stl1.png" height="200px"> <img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/stl2.png" height="200px">
+
+
 ## :battery: Donation
 
 If you like this project, you can buy me a cup of coffee :coffee:
