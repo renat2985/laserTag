@@ -1,7 +1,7 @@
 # laserTag
 Laser Tag game on NodeMCU and SSD1306 display.
 
-### If you want to see all the participants and change their weapons. You need to make an access point on your phone with the name "Point", and the password 12345678
+### ⚠️ If you want to see all the participants and change their weapons. You need to make an access point on your phone with the name ```Point```, and the password ```12345678```
 ### Further, all devices will appear on this site: http://www.onclick.lv/lasertag/
 
 <p align="center">
@@ -19,10 +19,10 @@ Laser Tag game on NodeMCU and SSD1306 display.
 </p>
 
 # Upload instruction
-## Web installer (recommended):
+## 🚀 Web installer (recommended):
 ### [https://renat2985.github.io/laserTag/](https://renat2985.github.io/laserTag/)
 
-## Or NodeMCU Flasher:
+### Or NodeMCU Flasher:
 Specification [/build/esp8266.esp8266.generic/laserTag.ino.bin](https://github.com/renat2985/laserTag/raw/main/build/esp8266.esp8266.generic/laserTag.ino.bin) files
 ```
     Module: Generic ESP8266 Module
@@ -32,7 +32,7 @@ Specification [/build/esp8266.esp8266.generic/laserTag.ino.bin](https://github.c
     Flash Frequency: 40Mhz
 ```
 
-<img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/nodemcu-flasher.png" width="50%">
+<img src="https://raw.githubusercontent.com/renat2985/esp8266-Radio/master/tutorial/nodemcu-flasher.png" width="40%">
 https://github.com/nodemcu/nodemcu-flasher
 
 Download Release: [Win32](https://github.com/nodemcu/nodemcu-flasher/blob/master/Win32/Release/ESP8266Flasher.exe) or [Win64](https://github.com/nodemcu/nodemcu-flasher/blob/master/Win64/Release/ESP8266Flasher.exe).
