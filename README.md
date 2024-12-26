@@ -2,7 +2,7 @@
 Laser Tag game on NodeMCU and SSD1306 display.
 
 ### ⚠️ If you want to see all the participants and change their weapons. You need to make an access point on your phone with the name ```Point```, and the password ```12345678```
-### Further, all devices will appear on this site: http://www.onclick.lv/lasertag/
+### Further, all devices will appear on this site: https://www.onclick.lv/lasertag/
 
 <p align="center">
 <img src="https://github.com/renat2985/laserTag/blob/main/photo/screen.png" width=90% height=90%>
